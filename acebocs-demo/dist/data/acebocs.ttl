@@ -1,0 +1,544 @@
+@prefix : <http://purl.org/twc/acebocs/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sio: <http://semanticscience.org/resource/> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ncit: <http://purl.obolibrary.org/obo/NCIT_> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix acebocs: <http://purl.org/twc/acebocs/> .
+@prefix acebocs-a: <http://purl.org/twc/acebocs/activity/> .
+@prefix acebocs-p: <http://purl.org/twc/acebocs/practice/> .
+@base <http://purl.org/twc/acebocs/> .
+
+<http://purl.org/twc/acebocs/> rdf:type owl:Ontology ;
+                                owl:imports <http://semanticscience.org/ontology/sio/v1.59/sio-release.owl> ,
+                                            <http://www.w3.org/ns/prov-o-20130430> .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://www.w3.org/2004/02/skos/core#definition
+skos:definition rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://purl.obolibrary.org/obo/NCIT_C16576
+ncit:C16576 rdf:type owl:Class ;
+            dc:description "A person who belongs to the sex that normally produces ova. The term is used to indicate biological sex distinctions, or cultural gender role distinctions, or both." ;
+            rdfs:label "Female" .
+
+
+###  http://purl.obolibrary.org/obo/NCIT_C17357
+ncit:C17357 rdf:type owl:Class ;
+            dc:description "Characteristics of people that are socially constructed, including norms, behaviors, and roles based on sex. As a social construct, gender varies from society to society and can change over time. (Adapted from WHO.)" ;
+            rdfs:label "Gender" .
+
+
+###  http://purl.obolibrary.org/obo/NCIT_C20197
+ncit:C20197 rdf:type owl:Class ;
+            dc:description "A person who belongs to the sex that normally produces sperm. The term is used to indicate biological sex distinctions, cultural gender role distinctions, or both." ;
+            rdfs:label "Male" .
+
+
+###  http://purl.org/twc/acebocs/Client
+acebocs:Client rdf:type owl:Class ;
+               rdfs:subClassOf prov:Person ;
+               rdfs:label "Client" .
+
+
+###  http://purl.org/twc/acebocs/Consultant
+acebocs:Consultant rdf:type owl:Class ;
+                   rdfs:subClassOf prov:Person ;
+                   rdfs:label "Consultant" .
+
+
+###  http://purl.org/twc/acebocs/ConsultationActivity
+acebocs:ConsultationActivity rdf:type owl:Class ;
+                             rdfs:subClassOf sio:SIO_000006 ,
+                                             prov:Activity ,
+                                             [ rdf:type owl:Restriction ;
+                                               owl:onProperty sio:SIO_000668 ;
+                                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                               owl:onClass acebocs:Practice
+                                             ] ;
+                             rdfs:label "Consultation Activity" .
+
+
+###  http://purl.org/twc/acebocs/ConsultationEvent
+acebocs:ConsultationEvent rdf:type owl:Class ;
+                          rdfs:subClassOf sio:SIO_000006 ,
+                                          prov:Activity ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty sio:SIO_000312 ;
+                                            owl:someValuesFrom acebocs:ConsultationRecord
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty sio:SIO_000139 ;
+                                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                            owl:onClass acebocs:Consultant
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty sio:SIO_000139 ;
+                                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                            owl:onClass acebocs:Therapist
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty sio:SIO_000332 ;
+                                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                            owl:onClass acebocs:Client
+                                          ] ;
+                          rdfs:label "Consultation Event" .
+
+
+###  http://purl.org/twc/acebocs/ConsultationRecord
+acebocs:ConsultationRecord rdf:type owl:Class ;
+                           rdfs:subClassOf prov:Entity ,
+                                           [ rdf:type owl:Restriction ;
+                                             owl:onProperty sio:SIO_000332 ;
+                                             owl:someValuesFrom acebocs:TreatmentEvent
+                                           ] ;
+                           rdfs:label "Consultation Record" .
+
+
+###  http://purl.org/twc/acebocs/Discussed
+acebocs:Discussed rdf:type owl:Class ;
+                  rdfs:subClassOf acebocs:ConsultationActivity ;
+                  rdfs:label "Discussed" .
+
+
+###  http://purl.org/twc/acebocs/Modeled
+acebocs:Modeled rdf:type owl:Class ;
+                rdfs:subClassOf acebocs:ConsultationActivity ;
+                rdfs:label "Modeled" .
+
+
+###  http://purl.org/twc/acebocs/NextSession
+acebocs:NextSession rdf:type owl:Class ;
+                    rdfs:subClassOf acebocs:ConsultationActivity ;
+                    rdfs:label "Next Session" .
+
+
+###  http://purl.org/twc/acebocs/Other
+acebocs:Other rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:ConsultationActivity ;
+              rdfs:label "Other" .
+
+
+###  http://purl.org/twc/acebocs/Practice
+acebocs:Practice rdf:type owl:Class ;
+                 rdfs:subClassOf sio:SIO_000999 ,
+                                 prov:Activity ;
+                 rdfs:label "Practice" .
+
+
+###  http://purl.org/twc/acebocs/ReviewedTape
+acebocs:ReviewedTape rdf:type owl:Class ;
+                     rdfs:subClassOf acebocs:ConsultationActivity ;
+                     rdfs:label "Reviewed Tape" .
+
+
+###  http://purl.org/twc/acebocs/RolePlayed2
+acebocs:RolePlayed2 rdf:type owl:Class ;
+                    rdfs:subClassOf acebocs:ConsultationActivity ;
+                    rdfs:label "Role Played 2" .
+
+
+###  http://purl.org/twc/acebocs/Therapist
+acebocs:Therapist rdf:type owl:Class ;
+                  rdfs:subClassOf prov:Person ;
+                  rdfs:label "Therapist" .
+
+
+###  http://purl.org/twc/acebocs/TreatmentActivity
+acebocs:TreatmentActivity rdf:type owl:Class ;
+                          rdfs:subClassOf sio:SIO_000006 ,
+                                          prov:Activity ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty sio:SIO_000668 ;
+                                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                            owl:onClass acebocs:Practice
+                                          ] ;
+                          rdfs:label "Treatment Activity" .
+
+
+###  http://purl.org/twc/acebocs/TreatmentEvent
+acebocs:TreatmentEvent rdf:type owl:Class ;
+                       rdfs:subClassOf sio:SIO_000006 ,
+                                       prov:Activity ,
+                                       [ rdf:type owl:Restriction ;
+                                         owl:onProperty sio:SIO_000028 ;
+                                         owl:someValuesFrom acebocs:TreatmentActivity
+                                       ] ;
+                       rdfs:label "Treatment Event" .
+
+
+###  http://purl.org/twc/acebocs/activity/Covered
+acebocs-a:Covered rdf:type owl:Class ;
+                  rdfs:subClassOf acebocs:TreatmentActivity ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty sio:SIO_000139 ;
+                                    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                    owl:onClass acebocs:Therapist
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty sio:SIO_000291 ;
+                                    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                    owl:onClass acebocs:Client
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty sio:SIO_000668 ;
+                                    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                    owl:onClass acebocs:Practice
+                                  ] ;
+                  dc:description "therapist delivered the practice with a client" ;
+                  rdfs:label "Covered" .
+
+
+###  http://purl.org/twc/acebocs/activity/HWAssigned
+acebocs-a:HWAssigned rdf:type owl:Class ;
+                     rdfs:subClassOf acebocs:TreatmentActivity ;
+                     dc:description "therapist asked client to perform homework related to a practice" ;
+                     rdfs:label "Homework Assigned" .
+
+
+###  http://purl.org/twc/acebocs/activity/InVivo
+acebocs-a:InVivo rdf:type owl:Class ;
+                 rdfs:subClassOf acebocs:TreatmentActivity ;
+                 dc:description "therapist had client do a live performance (e.g., ask a stranger a question)" ;
+                 rdfs:label "In Vivo" .
+
+
+###  http://purl.org/twc/acebocs/activity/RolePlayed
+acebocs-a:RolePlayed rdf:type owl:Class ;
+                     rdfs:subClassOf acebocs:TreatmentActivity ;
+                     rdfs:label "Role Played" .
+
+
+###  http://purl.org/twc/acebocs/activity/Understood
+acebocs-a:Understood rdf:type owl:Class ;
+                     rdfs:subClassOf acebocs:TreatmentActivity ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty sio:SIO_000139 ;
+                                       owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                       owl:onClass acebocs:Client
+                                     ] ;
+                     dc:description "client understood the practice delivered" ;
+                     rdfs:label "Understood" .
+
+
+###  http://purl.org/twc/acebocs/practice/A01
+acebocs-p:A01 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with child. Introduction to anxiety treatment: establish rapport, explain information about treatment, present fear thermometer. Establish rapport: do an icebreaker, play a \"Personal Facts\" game, praise child throughout session. Explain basics of treatment: confidentiality, activities in sessions, take-home assignments, regular attendance. Present fear thermometer: have child rate their current fearfulness using the thermometer." ;
+              dc:identifier "A01" ;
+              rdfs:label "Getting Acquainted - Anx" ;
+              skos:definition "Practice done with child. Introduction to anxiety treatment. Establish rapport, explain basic components of treatment, present fear thermometer." .
+
+
+###  http://purl.org/twc/acebocs/practice/A02
+acebocs-p:A02 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with family. With child, develop list of fears and reactions to signs of anxiety. Introduce fear ladder. Encourage openness. Create list of fears, get ratings for each one, rank fears in terms of ratings. Bring list of fears to parent, re-rank them according to parent. Bring child and parent together, select items to go on final fear ladder. Assign fear ladder homework." ;
+              dc:identifier "A02" ;
+              rdfs:label "Fear Ladder" ;
+              skos:definition "Practice done with family. Develop list of fears and reactions to signs of anxiety." .
+
+
+###  http://purl.org/twc/acebocs/practice/A03
+acebocs-p:A03 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with child. Introduce mechanisms behind anxiety (how it works) and treatment. Explain three parts of anxiety: sensations [introduce body map], thoughts [introduce thought bubbles], behaviors [find examples in media]. Explain that anxiety is a normal emotion, can be good, and can be a false alarm. Set treatment goal of reducing false alarm anxiety. Introduce practice and monitoring." ;
+              dc:identifier "A03" ;
+              rdfs:label "Learning Anxiety-Child" ;
+              skos:definition "Practice done with child. Introduce mechanisms behind anxiety (how it works) and treatment." .
+
+
+###  http://purl.org/twc/acebocs/practice/A04
+acebocs-p:A04 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with caregiver. Explain basics of treatment (confidentiality, worksheets, practice assignments, and attendance) and how this treatment addresses their child's anxiety. Discuss what does not work, manage expectations, discuss what can work, describe your role, and describe parent's role. Cover Helping Your Child Succeed handout and provide Understanding Anxiety handout." ;
+              dc:identifier "A04" ;
+              rdfs:label "Learning Anxiety-Parent" ;
+              skos:definition "Practice done with caregiver. Explain basics of treatment (confidentiality, worksheets, practice assignments, and attendance) and how this treatment addresses their child's anxiety." .
+
+
+###  http://purl.org/twc/acebocs/practice/A05
+acebocs-p:A05 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with child. Practice exposure to feared items or siutations, demonstrate relationship between practice and reduced anxiety. Use a Practice Record to document fear ratings during exposure practice. Review the Practice: If ratings decreased, use Practice Record to demonstrate effect of practice. If ratings did not decrease, point out that the child endured and feared consequences didn't occur." ;
+              dc:identifier "A05" ;
+              rdfs:label "Practicing" ;
+              skos:definition "Practice done with child. Practice exposure to feared items or siutations, demonstrate relationship between practice and reduced anxiety." .
+
+
+###  http://purl.org/twc/acebocs/practice/A06
+acebocs-p:A06 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with child. Implemented at the end of treatment to consolidate and bring to attention information and skills attained throughout treatment and encourage practice beyond treatment. Introduce maintenance: discuss learned treatment concepts and how hard work and practice have led to improvement. Predict challenges: explain that previously felt negative feelings may return but the child now has new skills to deal with them." ;
+              dc:identifier "A06" ;
+              rdfs:label "Maintenance" ;
+              skos:definition "Practice done with child. Implemented at the end of treatment to consolidate and bring to attention information and skills attained throughout treatment and encourage practice beyond treatment." .
+
+
+###  http://purl.org/twc/acebocs/practice/A07
+acebocs-p:A07 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with child. Used to address negative thoughts that can interefere with treatment. Child is instructed how to recognize and modify these thoughts. Introduce STOP worksheet: Scared: Recognize scared or anxious feeling. Thoughts: notice thoughts causing anxiety. Other thoughts: recognize other possibilities contradiciting thought provoking anxiety. Praise: praise yourself for enduring anxious situation." ;
+              dc:identifier "A07" ;
+              rdfs:label "Cognitive STOP" ;
+              skos:definition "Practice done with child. Used to address negative thoughts that can interefere with treatment. Child is instructed how to recognize and modify these thoughts." .
+
+
+###  http://purl.org/twc/acebocs/practice/A08
+acebocs-p:A08 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:identifier "A08" ;
+              rdfs:label "Wrap Up" .
+
+
+###  http://purl.org/twc/acebocs/practice/C01
+acebocs-p:C01 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with caregiver. Implemented at the beginning of treatment to establish rapport, understand the main challenges, set goals and a plan to achieve these goals. Understand main challenges and set goals: administer Challenges and Goals Interview. Manage expectations, discuss what can work [cover What Can Help handout], describe your role, describe parent's role. Cover Thinking Ahead worksheet to identify any potential barriers to treatment participation. Introduce Behavior Rating Scale." ;
+              dc:identifier "C01" ;
+              rdfs:label "Engaging Parents" ;
+              skos:definition "Practice done with caregiver. Implemented at the beginning of treatment to establish rapport, understand the main challenges, set goals and a plan to achieve these goals." .
+
+
+###  http://purl.org/twc/acebocs/practice/C02
+acebocs-p:C02 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with caregiver. Establish rapport and enlist parent's support in changing their child's misbehavior. Explain factors that underlie misbehavior and noncompliance and the role of consequences in changing this behavior. Introduce Four Factors worksheet. Describe goals of treatment program, reinforce participation, and answer questions." ;
+              dc:identifier "C02" ;
+              rdfs:label "Learning Behavior" ;
+              skos:definition "Practice done with caregiver. Explain factors that underlie misbehavior and noncompliance and the role of consequences in changing this behavior." .
+
+
+###  http://purl.org/twc/acebocs/practice/C03
+acebocs-p:C03 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with caregiver. Explain how parent's interaction style can affect child's motivation to work for them. Engage in Best Supervisor/Worst Supervisor Activity. State goals: improving attention and building a positive history. Instruct parent to establish a more positive interaction pattern with their child through regular \"one-on-one time\". Cover One-on-One Time Handout. Manage expectations, deal with concerns, address time management, debrief after activity." ;
+              dc:identifier "C03" ;
+              rdfs:label "One on One Time" ;
+              skos:definition "Practice done with caregiver. Explain how parent's interaction style can affect child's motivation to work for them. Instruct parent on how to establish a more positive interaction pattern with their child." .
+
+
+###  http://purl.org/twc/acebocs/practice/C04
+acebocs-p:C04 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with caregiver. Teach parent how to give effective praise: Instruct parent on how to provide appropiate praise to their child for positve behavior and reward independent play with positive attention. Explain that positive behavior can be increased by the type of parental attention that follows that behavior and that praise is a tool to increase desired behavior. Explain that attention is a motivator of behavior. Engage in Praising Follow-Through Activity. Explain the importance of independent play. Engage in Praising Independent Play Activity. Debrief and discuss concerns." ;
+              dc:identifier "C04" ;
+              rdfs:label "Praise" ;
+              skos:definition "Practice done with caregiver. Teach parent how to give effective praise: Instruct parent on how to provide appropiate praise to their child for positve behavior and reward independent play with positive attention." .
+
+
+###  http://purl.org/twc/acebocs/practice/C05
+acebocs-p:C05 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with caregiver. Teach parent that unwanted behaviors can be rewarded through attention. Review concept of reinforcement.  Instruct parent to reduce the occurrence of mild negative behaviors by removing attention for these and increasing attention for more appropiate alternatives. Emphasize attending to good behavior. Engage in activity Practice Active Ignoring. Introduce the concept of extinction burst." ;
+              dc:identifier "C05" ;
+              rdfs:label "Active Ignoring" ;
+              skos:definition "Practice done with caregiver. Teach parent that unwanted behaviors can be rewarded through attention. Instruct parent to reduce the occurrence of mild negative behaviors by removing attention for these and increasing attention for more appropiate alternatives." .
+
+
+###  http://purl.org/twc/acebocs/practice/C06
+acebocs-p:C06 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with caregiver. Teach parent when and how to give instructions to improve child's follow-through. Introduce Giving Effective Instructions handout. Engage in Labeling Ineffective Instructions activity. Discuss how to say instructions, eye contact, distractions, prompts for transitions, tone, and check-ins. Engage in Practice Giving Instructions activity." ;
+              dc:identifier "C06" ;
+              rdfs:label "Effective Instructions" ;
+              skos:definition "Practice done with caregiver. Teach parent when and how to give instructions to improve child's follow-through." .
+
+
+###  http://purl.org/twc/acebocs/practice/C07
+acebocs-p:C07 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with caregiver. Instruct the parent how to use reinforcement to establish a rewards program that increases desired behaviors. Discuss concerns: bribery, special treatment, and making time. Review rewards program with child and parent." ;
+              dc:identifier "C07" ;
+              rdfs:label "Rewards" ;
+              skos:definition "Practice done with caregiver. Instruct the parent how to use reinforcement to establish a rewards program that increases desired behaviors." .
+
+
+###  http://purl.org/twc/acebocs/practice/C08
+acebocs-p:C08 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:identifier "C08" ;
+              rdfs:label "Time Out" ;
+              skos:definition "Practice done with caregiver. Instruct the parent how to use time-outs to deal with moderately disruptive behaviors." ,
+                              "Practice done with caregiver. Instruct the parent how to use time-outs to deal with moderately disruptive behaviors. Introduce the cocnerpt of time out. Discuss benefits of time outs and when to use them. Review common problems. Engage in activity Practicing Time Out. Engage in activity Practice Introducing Time Out." .
+
+
+###  http://purl.org/twc/acebocs/practice/C09
+acebocs-p:C09 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with caregiver. Instruct parent how to identify high-risk situations for child's misbehavior and how to prevent misbehavior in these situations. Ask parent to identify high-risk situations. Review Making a Plan handout. Engage in Making a Plan activity. Manage concerns of parenting in public." ;
+              dc:identifier "C09" ;
+              rdfs:label "Making a Plan" ;
+              skos:definition "Practice done with caregiver. Instruct parent how to identify high-risk situations for child's misbehavior and how to prevent misbehavior in these situations." .
+
+
+###  http://purl.org/twc/acebocs/practice/C10
+acebocs-p:C10 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with caregiver. Instruct parent how to monitor behavior at school by establishing a home-based reward program. Establish target behavior problems and communication with the child's school. Introduce daily report card. Review Daily School Behavior Report Card handout. Engage in Mock Report Card exercise." ;
+              dc:identifier "C10" ;
+              rdfs:label "Daily Report Card" ;
+              skos:definition "Practice done with caregiver. Instruct parent how to monitor behavior at school by establishing a home-based reward program." .
+
+
+###  http://purl.org/twc/acebocs/practice/C11
+acebocs-p:C11 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with caregiver. Implemented at the end of treatment for conduct problems to consolidate learned skills and plan for future problems. Review treatment program. Manage expectations. Discuss lapse and relapse. Discuss monitoring. Engage in Stump the Parent activity." ;
+              dc:identifier "C11" ;
+              rdfs:label "Looking Ahead" ;
+              skos:definition "Practice done with caregiver. Implemented at the end of treatment for conduct problems to consolidate learned skills and plan for future problems." .
+
+
+###  http://purl.org/twc/acebocs/practice/C12
+acebocs-p:C12 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with caregiver. Implemented after the completion of treatment for conduct problems to review systems in place to maintain child's improvement. Review reward system and daily report card, if appropiate, to determine if they should be continued. Provide feedback and support." ;
+              dc:identifier "C12" ;
+              rdfs:label "Booster" ;
+              skos:definition "Practice done with caregiver. Implemented after the completion of treatment for conduct problems to review systems in place to maintain child's improvement." .
+
+
+###  http://purl.org/twc/acebocs/practice/D01
+acebocs-p:D01 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with child. Implemented at the beginning of depression treatment to establish rapport and introduce basics of treatment. Engage in Ice Breaker activity. Engage in Personal Facts Game activity. Provide overview of treatment program and describe treatment structure. Engage in Feelings Thermometer activity." ;
+              dc:identifier "D01" ;
+              rdfs:label "Getting Acquainted - Dep" ;
+              skos:definition "Practice done with child. Implemented at the beginning of depression treatment to establish rapport and introduce basics of treatment." .
+
+
+###  http://purl.org/twc/acebocs/practice/D02
+acebocs-p:D02 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with child. Teach the child about the nature of depression. Teach the child that moods can be controlled by thoughts and behaviors. Introduce the Feeling-Thinking-Doing Triangle. Engage in The Feeling-Thinking-Doing Triangle activity. Normalize negative feelings. Introduce the Toolbox Concept. Engage in How I Show My Feelings Worksheet activity. Explain the importance of monitoring." ;
+              dc:identifier "D02" ;
+              rdfs:label "Learning Dep - Child" ;
+              skos:definition "Practice done with child. Teach the child about the nature of depression. Teach the child that moods can be controlled by thoughts and behaviors." .
+
+
+###  http://purl.org/twc/acebocs/practice/D03
+acebocs-p:D03 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with caregiver. Introduce parent to treatment concepts (confidentiality, worksheets, practice assignments, and regular attendance). Explain the nature of depression. Conduct Parent Interview for Depression. Introduce Toolbox Concept. Provide Understanding Depression Handout." ;
+              dc:identifier "D03" ;
+              rdfs:label "Learning Dep - Parent" ;
+              skos:definition "Practice done with caregiver. Introduce parent to treatment concepts (confidentiality, worksheets, practice assignments, and regular attendance). Explain the nature of depression." .
+
+
+###  http://purl.org/twc/acebocs/practice/D04
+acebocs-p:D04 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with child. Teach child five steps for effective problem solving and how to apply them to real problems in the child's life. Introduce Problem Solving S-T-E-P-S. Engage in Solving a Problem using S-T-E-P-S activity." ;
+              dc:identifier "D04" ;
+              rdfs:label "Problem Solving" ;
+              skos:definition "Practice done with child. Teach child five steps for effective problem solving and how to apply them to real problems in the child's life." .
+
+
+###  http://purl.org/twc/acebocs/practice/D05
+acebocs-p:D05 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with child. Teach child how to use the relation between behaviors and feelings to schedule activities that will increase positive feelings. Engage in Doing Something Fun to Feel Better activity. Discuss the connection between feelings and actions. Discuss four types of activities. Complete Ten Things I Can Do to Feel Good Worksheet. Begin Scheduling Time for Fun Worksheet." ;
+              dc:identifier "D05" ;
+              rdfs:label "Activity Selection" ;
+              skos:definition "Practice done with child. Teach child how to use the relation between behaviors and feelings to schedule activities that will increase positive feelings." .
+
+
+###  http://purl.org/twc/acebocs/practice/D06
+acebocs-p:D06 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with child. Teach the child how to identify somatic cues that show when they are tense and engage in self-calming via deep breathing, deep muscle relaxation, and guided imagery. Introduce Deep Muscle Relaxation. Engage in Deep Muscle Relaxation & Guided Imagery Activity. Discuss the relaxation exercise." ;
+              dc:identifier "D06" ;
+              rdfs:label "Relaxation" ;
+              skos:definition "Practice done with child. Teach the child how to identify somatic cues that show when they are tense and engage in self-calming via deep breathing, deep muscle relaxation, and guided imagery." .
+
+
+###  http://purl.org/twc/acebocs/practice/D07
+acebocs-p:D07 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with child. Teach child how to engage in Quick Calming, a relaxation technique to be used in time-sensitive or public situations. Engage in Develop \"Quick List\" Activity. Introduce Quick Calming. Introduce slow, deep breathing. Engage in Slow, Deep Breathing Activity. Engage in My Relaxing Place Activity. Engage in Quick Calming Practice Activity. Engage in Quick Calming in Public Activity. Anticipate and discuss difficulties in using these techniques." ;
+              dc:identifier "D07" ;
+              rdfs:label "Quick Calming" ;
+              skos:definition "Practice done with child. Teach child how to engage in Quick Calming, a relaxation technique to be used in time-sensitive or public situations." .
+
+
+###  http://purl.org/twc/acebocs/practice/D09
+acebocs-p:D09 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with child. Instruct the child how to identify and revise unrealistic negative thoughts in order to improve mood. Engage in \"B-L-U-E\" Glasses Activity. Illustrate \"Just Because I think it Doesn't Mean It's True\". Use Changing B-L-U-E Thoughts worksheet to generate more realistic thoughts." ;
+              dc:identifier "D09" ;
+              rdfs:label "Positive Self" ;
+              skos:definition "Practice done with child. Instruct the child how to identify and revise unrealistic negative thoughts in order to improve mood." .
+
+
+###  http://purl.org/twc/acebocs/practice/D10
+acebocs-p:D10 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with child. Instruct the child how to leverage friends, silver linings, and distractions to improve mood. Engage in Tell a Story activity. Introduce \"Think of a Friend\". Introduce \"Look for the Silver Lining\". Introduce \"Change Channels\". Engage in White Bear Activity. Engage in Rock and Candy activity." ;
+              dc:identifier "D10" ;
+              rdfs:label "Cognitive BLUE" ;
+              skos:definition "Practice done with child. Instruct the child how to leverage friends, silver linings, and distractions to improve mood." .
+
+
+###  http://purl.org/twc/acebocs/practice/D11
+acebocs-p:D11 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with child. Instruct the child to identify successful coping skills they have learned and how to perservere when they are not successful. Engage in My Favorite Skills for Feeling Good Activity. Introduce idea of perserverance. Explain Following My Plans Worksheet. Engage in Practicing My New Skills Activity." ;
+              dc:identifier "D11" ;
+              rdfs:label "Cognitive FUN" ;
+              skos:definition "Practice done with child. Instruct the child to identify successful coping skills they have learned and how to perservere when they are not successful." .
+
+
+###  http://purl.org/twc/acebocs/practice/D12
+acebocs-p:D12 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:identifier "D12" ;
+              rdfs:label "Plans for Coping" .
+
+
+###  http://purl.org/twc/acebocs/practice/D13
+acebocs-p:D13 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:identifier "D13" ;
+              rdfs:label "Wrap Up" .
+
+
+###  http://purl.org/twc/acebocs/practice/O01
+acebocs-p:O01 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:identifier "O01" ;
+              rdfs:label "Other" .
+
+
+###  http://purl.org/twc/acebocs/practice/T01
+acebocs-p:T01 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:description "Practice done with child. Instruct child how to develop a written narrative about traumatic events in order to reduce anxious responding to traumatic cues. Engage in Fear Thermometer and Relaxation Activites. Develop narrative of traumatic event. Engage in Relaxation Activity again." ;
+              dc:identifier "T01" ;
+              rdfs:label "Safety Planning" ;
+              skos:definition "Practice done with child. Instruct child how to develop a written narrative about traumatic events in order to reduce anxious responding to traumatic cues." .
+
+
+###  http://purl.org/twc/acebocs/practice/T02
+acebocs-p:T02 rdf:type owl:Class ;
+              rdfs:subClassOf acebocs:Practice ;
+              dc:identifier "Practice done with child. Instruct child how to maintain personal safety in the context of known risks. Minimize self-blame, teach child to detect danger, develop safety plan, and address secrets. Engage in Rehearse Plan Activity." ,
+                            "T02" ;
+              rdfs:label "Trauma Narrative" ;
+              skos:definition "Practice done with child. Instruct child how to maintain personal safety in the context of known risks." .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
