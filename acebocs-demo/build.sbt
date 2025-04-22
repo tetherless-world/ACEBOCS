@@ -19,7 +19,7 @@ libraryDependencies += guice
 libraryDependencies += "org.apache.jena" % "jena-arq" % "5.3.0"
 
 // https://mvnrepository.com/artifact/org.webjars/bootstrap
-libraryDependencies += "org.webjars" % "bootstrap" % "5.3.3"
+libraryDependencies += "org.webjars" % "bootstrap" % "5.3.5"
 
 // https://mvnrepository.com/artifact/org.webjars/jquery
 libraryDependencies += "org.webjars" % "jquery" % "3.7.1"
@@ -28,4 +28,4 @@ libraryDependencies += "org.webjars" % "jquery" % "3.7.1"
 libraryDependencies += "org.webjars" % "jquery-form" % "4.2.2"
 
 // https://mvnrepository.com/artifact/com.google.code.gson/gson
-libraryDependencies += "com.google.code.gson" % "gson" % "2.12.1"
+libraryDependencies += "com.google.code.gson" % "gson" % "2.13.0"
